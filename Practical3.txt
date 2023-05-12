@@ -1,0 +1,81 @@
+1) Create new project .Net Core API v 6.0
+
+- Use Identity in the project to authenticate user for accessing api.						 --Done
+- Use same database as previously used in previous practical. 							 ---Done
+- Use same table category and product table here that we have created previously.				 ---Done
+  ( don't create any UI for crud operation use directly table & records for category & products)	
+- Create a table called Order
+- Consider the below fields for above Model
+	+ OrderId
+	+ OrderDate
+	+ Note	
+	+ DisountAmount
+	+ StatusType
+	+ TotalAmount
+	+ CustomerName
+	+ CustomerEmail
+	+ CustomerContactNo
+	+ IsActive
+	+ CreatedOn
+	+ ModifiedOn		
+
+- Create another table Called OrderItems
+	+ OrderItemId
+	+ OrderId
+	+ ProductId
+	+ Quantity
+	+ Price
+	+ IsActive
+
+- Single Order may have multiple lineItems or single
+- You need to check available quantity before processing an order(Validation)
+- StatusType must be of enum. 
+	* Open (new order)
+	* Draft (On Hold) 
+	* Shipped (complete)		
+	* Paid
+- Create A Separate library for database interaction call DAL (Data Access Level)
+- Use Interface & Repository. use dependency injection to access data on the main project.
+- Create View Model and use View Model at the main project.
+- Don't use entity class directly on main project create ViewModels and do mapping
+
+
+
+- We need to build following api for maintaing Orders	
+- Below API can have anynomous access mean no authenticate needed
+	
+	+ Add Order (single and post orderitems in same api)	         -------------Done(not fully)	
+	+ AddUser ( we need to create a user to placing an order).     -------------Done
+	+ Login (user can login and access other API)			   -------------Done
+
+- Below API need to create with authentication flow
+
+	+ GetAllOrders (retirve order information only like orderid, note, CreateOn, paymentType, statusType)    -------------Done	
+		* we need to give filter for the above api 
+			> Date-range filter on CreatedOn 
+			> StatusType wise
+			> Customer wise (option but can have parameter with string to search by name/email)
+
+	+ GetOrderById (retrive single order with items & product detail)
+	+ Update OrderStatus (paramter OrderId, statusType)  			 -------------Done
+	+ InActiveOrder (paramter OrderId)							-------------Done
+	+ RemoveOrderItems( remove order items by orderid)			
+
+	+ UpdateOrderItemQuantity
+
+
+
+
+- Logged-in user as well as guest user can placed order if guest user then name & email mandatory else optional if null take from user details.
+- All the api must be access by authorize user.
+- Once order status set to Shipped, can't Inactive, can't change status.
+- Default order status will be OPEN.
+- Once order status change to SHIPPED, can't inactive, can change to PAID status only,
+- Once it change to PAID can't update status further not inactive order.
+- UpdateOrderItemQuantity (min qty is 1 so if user trying to update 0 qty, fire validation to keep atleast 1 qty else call remove order item).
+- On Update order item Quantity or remove order item, also update ordertotal.
+- Can't update qty or remove item for inactive orders.
+- Make sure all validation work properly.
+
+
+
