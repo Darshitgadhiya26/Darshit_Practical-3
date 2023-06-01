@@ -2,6 +2,8 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Darshit_Practical_3_Web.Model;
+using Practical_3.Model.Model.Exam_4_Model;
+using Practical_3.Model.Model;
 
 namespace Darshit_Practical_3_Web.Data
 {
@@ -17,7 +19,12 @@ namespace Darshit_Practical_3_Web.Data
         public DbSet<Category> Categories { get; set; }
         public DbSet<Product> Products { get; set; }
 
-        
+        public DbSet<AddressModel> Address { get; set; }
+
+        public DbSet<OrderAddress> OrderAddress { get; set; }
+
+        public DbSet<Status> Statuses { get; set; }
+
 
 
         protected override void OnModelCreating(ModelBuilder builder)

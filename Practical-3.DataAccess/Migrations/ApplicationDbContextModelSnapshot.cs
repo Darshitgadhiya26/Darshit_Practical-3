@@ -52,54 +52,6 @@ namespace Practical_3.DataAccess.Migrations
                     b.ToTable("Categories");
                 });
 
-            modelBuilder.Entity("Darshit_Practical_3_Web.Model.Order", b =>
-                {
-                    b.Property<int>("OrderId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<string>("CustomerContactNo")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("CustomerEmail")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("CustomerName")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<double>("DiscountAmount")
-                        .HasColumnType("double");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("tinyint(1)");
-
-                    b.Property<DateTime>("ModifiedOn")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<string>("Note")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<DateTime>("OrderDate")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<int>("Status")
-                        .HasColumnType("int");
-
-                    b.Property<double>("TotalAmount")
-                        .HasColumnType("double");
-
-                    b.HasKey("OrderId");
-
-                    b.ToTable("Orders");
-                });
-
             modelBuilder.Entity("Darshit_Practical_3_Web.Model.OrderItems", b =>
                 {
                     b.Property<int>("OrderItemId")
@@ -363,6 +315,125 @@ namespace Practical_3.DataAccess.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("Practical_3.Model.Model.Exam_4_Model.AddressModel", b =>
+                {
+                    b.Property<int>("AddressId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<string>("Address")
+                        .HasColumnType("longtext");
+
+                    b.Property<int>("AddressType")
+                        .HasColumnType("int");
+
+                    b.Property<string>("City")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("ContactNo")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("ContactPerson")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Country")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("State")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("ZipCode")
+                        .HasColumnType("longtext");
+
+                    b.HasKey("AddressId");
+
+                    b.ToTable("Address");
+                });
+
+            modelBuilder.Entity("Practical_3.Model.Model.Exam_4_Model.OrderAddress", b =>
+                {
+                    b.Property<int>("OrderAddId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<int>("AddressId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("OrderId")
+                        .HasColumnType("int");
+
+                    b.HasKey("OrderAddId");
+
+                    b.HasIndex("AddressId");
+
+                    b.HasIndex("OrderId");
+
+                    b.ToTable("OrderAddress");
+                });
+
+            modelBuilder.Entity("Practical_3.Model.Model.Exam_4_Model.Status", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Statuses");
+                });
+
+            modelBuilder.Entity("Practical_3.Model.Model.Order", b =>
+                {
+                    b.Property<int>("OrderId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CreatedOn")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("CustomerContactNo")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("CustomerEmail")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("CustomerName")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<double>("DiscountAmount")
+                        .HasColumnType("double");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<DateTime>("ModifiedOn")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("Note")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<DateTime>("OrderDate")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.Property<double>("TotalAmount")
+                        .HasColumnType("double");
+
+                    b.HasKey("OrderId");
+
+                    b.ToTable("Orders");
+                });
+
             modelBuilder.Entity("Darshit_Practical_3_Web.Model.Category", b =>
                 {
                     b.HasOne("Darshit_Practical_3_Web.Model.Category", "ParentCategory")
@@ -374,13 +445,13 @@ namespace Practical_3.DataAccess.Migrations
 
             modelBuilder.Entity("Darshit_Practical_3_Web.Model.OrderItems", b =>
                 {
-                    b.HasOne("Darshit_Practical_3_Web.Model.Order", "Order")
-                        .WithMany("orderItems")
+                    b.HasOne("Practical_3.Model.Model.Order", "Order")
+                        .WithMany("OrderItems")
                         .HasForeignKey("OrderId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Darshit_Practical_3_Web.Model.Product", "product")
+                    b.HasOne("Darshit_Practical_3_Web.Model.Product", "Product")
                         .WithMany()
                         .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -388,7 +459,7 @@ namespace Practical_3.DataAccess.Migrations
 
                     b.Navigation("Order");
 
-                    b.Navigation("product");
+                    b.Navigation("Product");
                 });
 
             modelBuilder.Entity("Darshit_Practical_3_Web.Model.Product", b =>
@@ -451,9 +522,28 @@ namespace Practical_3.DataAccess.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Darshit_Practical_3_Web.Model.Order", b =>
+            modelBuilder.Entity("Practical_3.Model.Model.Exam_4_Model.OrderAddress", b =>
                 {
-                    b.Navigation("orderItems");
+                    b.HasOne("Practical_3.Model.Model.Exam_4_Model.AddressModel", "Address")
+                        .WithMany()
+                        .HasForeignKey("AddressId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Practical_3.Model.Model.Order", "Order")
+                        .WithMany()
+                        .HasForeignKey("OrderId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Address");
+
+                    b.Navigation("Order");
+                });
+
+            modelBuilder.Entity("Practical_3.Model.Model.Order", b =>
+                {
+                    b.Navigation("OrderItems");
                 });
 #pragma warning restore 612, 618
         }

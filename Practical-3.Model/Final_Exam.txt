@@ -1,0 +1,137 @@
+﻿Hello Trainee
+
+Below is the practical exam. Please complete in 8 hours.
+
+--------------------- .NET -----------------------------  
+
+1) Create Azure function Project .Net Core   
+
+   
+
+- Use the same database as you previously used.  
+
+- Create a Separate library Call DAL which provides the database interation. use this on azure function.  
+
+- We need to create below function   
+
+   
+
++ AddAddress  ---done  
+
++ GetAddressList   ---done  
+
++ UpdateOrderStatus  ---done  
+
++ CreateDraftOrder  
+
++ Update OrderAddress  
+
+
+ GetOrders (below filter options)  
+
+* (Date-Range) (By default => if today date is less than 5th then previous month else current month)  
+
+* (By customer name/email) (single custome search)  
+
+* (Active/Inactive)  
+
+* Status (multiple)  
+
+* Product (multiple)  
+
+* Show below fields on response  
+
+> OderID  
+
+> Description  
+
+> Customer name, email  
+
+> status (must be name)  
+
+> totalItems  
+
+> Total Amount  
+
+> Shipping address ( format => building/socity/area , city, state, country-zip)  
+
+   
+
+  
+
+  
+
+  
+
+- Create Address table with the below field  
+
+   
+
++ AddressId  
+
++ AddressType  
+
++ Address (building/flat No or society area)  
+
++ Country  
+
++ State  
+
++ City  
+
++ ZipCode  
+
++ ContactPerson  
+
++ ContactNo  
+
+   
+
+- Create another table called OrderAddress  
+
+   
+
++ OrderAddId  
+
++ OrderId  
+
++ AddressId  
+
+   
+
+- AddressType must be of Enum  
+
+   
+
++ Shipping  
+
++ Billing  
+
+   
+
+   
+
+- Order Can have only 1 shipping address & 1 billing address.  
+
+- Must have Shipping address before order status change to PAID.  
+
+- User can search with combination as well on GetOrders functions  
+
+- Make sure all validation work properly.  
+
+- Put proper comments where needed.  
+
+- Download the use postman for the calling an api.  
+
+  
+
+  
+
+--------------------- Angular ---------------------------  
+
+- Use all component in Angular material.  
+
+- Create all validation control in Reactive Form in Angular  
+
+- Do not use disabled button when required form. Make sure all required message show when click on submit button  
+

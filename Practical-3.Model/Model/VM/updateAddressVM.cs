@@ -6,10 +6,7 @@ using System.Threading.Tasks;
 
 namespace Practical_3.Model.Model.VM
 {
-    public class OrdersItem
+    public class updateAddressVM
     {
-        public int Productid { get; set; }
-
-        public int Quantity { get; set; }
     }
 }

@@ -6,9 +6,12 @@ using Practical_3.DataAccess.Repository.IRepository;
 using Practical_3.Model.Model.VM;
 using System.Text.Json.Serialization;
 using System.Text.Json;
-using static Darshit_Practical_3_Web.Model.Order;
 using System.Security.Claims;
 using NuGet.Protocol.Plugins;
+using static Practical_3.Model.Model.Order;
+using Practical_3.Model.Model;
+using Practical_3.Model.Model.Exam_4_Model;
+using Practical_3.DataAccess.Migrations;
 
 namespace Darshit_Practical_3_Web.Controllers
 {
@@ -38,7 +41,7 @@ namespace Darshit_Practical_3_Web.Controllers
         #region Add Order
         [HttpPost]
         [Route("Add-Order")]
-        public async Task<ActionResult> Post([FromBody] OrdersVM orders)
+        public async Task<ActionResult> Post([FromBody] OrderVm orders)
         {
             try
             {
@@ -50,47 +53,67 @@ namespace Darshit_Practical_3_Web.Controllers
                 {
                     CustomerName = string.IsNullOrEmpty(orders.CustomerName) ? (user.Value) : orders.CustomerName,
                     CustomerEmail = orders.CustomerEmail,
+                    CustomerContactNo = orders.CustomerContactNo,
                     OrderDate = DateTime.Now,
                     Note = orders.Note,
                     Status = StatusType.Open,
                     DiscountAmount = 10,
-                    CustomerContactNo = orders.CustomerContactNo,
                     IsActive = true,
                     CreatedOn = DateTime.Now,
-
                 };
 
-                double Total_price = 0;
+
+                double totalPrice = 0;
+                double discount = 0;
+                double totalAmount = 0;
 
                 //Add orderItems
+
                 var orderItems = new List<OrderItems>();
 
-                foreach (OrderItemVM item in orders.OrderItems)
+                foreach (var item in orders.orderItems)
                 {
-                    var product = _unitOfWork.Product.GetFirstOrDefault(x => x.ProductId == item.Productid);
+                    var product = _unitOfWork.Product.GetFirstOrDefault(p => p.ProductId == item.ProductId);
+
                     if (product == null)
                     {
-                        return BadRequest($"Product with id not found");
+                        return new BadRequestObjectResult($"Product with ID {item.ProductId} not found");
                     }
+
+
+                    //cheack Quantity
                     if (product.Quantity < item.Quantity)
                     {
-                        return BadRequest($"Product with id {item.Productid} does not have enough quantity");
+                        return new BadRequestObjectResult($"Product with id {item.ProductId} does not have enough quantity");
                     }
+
                     var orderItem = new OrderItems
                     {
-                        ProductId = item.Productid,
+                        ProductId = item.ProductId,
                         Quantity = item.Quantity,
-                        IsActive = true,
-                        Price = product.Price * item.Quantity,
+                        Price = product.Price,
+                        IsActive = true
                     };
 
-                    Total_price += orderItem.Price;
+                    totalPrice += orderItem.Price * orderItem.Quantity;
+
+                    //it calculate Discount
+                    discount = totalPrice * order.DiscountAmount / 100;
+
+                    //its give final amount
+                    totalAmount = totalPrice - discount;
+
+
+                    //descrese product quntity
                     product.Quantity -= item.Quantity;
                     _unitOfWork.Product.Update(product);
+
+                    //add order item
                     orderItems.Add(orderItem);
+
                 }
 
-                if (orders.OrderItems.Count == 0)
+                if (orders.orderItems.Count == 0)
                 {
                     return BadRequest("No valid items in the order");
                 }
@@ -105,15 +128,28 @@ namespace Darshit_Practical_3_Web.Controllers
                     return BadRequest("Customer email is required");
                 }
 
-                order.orderItems = orderItems;
-                double discountAmount = Total_price * order.DiscountAmount / 100;
-                double totalAmount = Total_price - discountAmount;
+                order.OrderItems = orderItems;
+                double discountAmount = totalPrice * order.DiscountAmount / 100;
+                double to = totalPrice - discountAmount;
 
                 order.TotalAmount = totalAmount; // Set the total amount for the order
                 _unitOfWork.Order.Add(order);
                 _unitOfWork.Save();
 
-                return Ok($"Order with id {order.OrderId} added successfully");
+                //var address = await _unitOfWork.ad.FirstOrDefaultAsync(a => a.AddressId == draftOrder.AddressId);
+
+                //if (address == null)
+                //{
+                //    return new NotFoundObjectResult($"Address {draftOrder.AddressId} not found");
+                //}
+
+                //var orderAddress = new OrderAddress
+                //{
+                //    Order = order,
+                //    Address = address,
+                //};
+
+                return Ok();
             }
             catch (Exception ex)
             {
@@ -235,7 +271,7 @@ namespace Darshit_Practical_3_Web.Controllers
 
 
         #region InActiveOrder
-        [Authorize]
+        //[Authorize]
         [HttpPut]
         [Route("auth/InActiveOrder/{orderId}")]
         public IActionResult InActiveOrder(int orderId)
@@ -265,7 +301,7 @@ namespace Darshit_Practical_3_Web.Controllers
                 _unitOfWork.Order.Update(order);
                 _unitOfWork.Save();
 
-                return Ok($"Order with id {order.OrderId} inactivated successfully");
+                return Ok();
             }
             catch(Exception ex) 
             { 
@@ -439,7 +475,6 @@ namespace Darshit_Practical_3_Web.Controllers
 
 
         #region GetOrderByID
-        [Authorize]
         [HttpGet]
         [Route("auth/GetOrderByID")]
         public ActionResult<Order> GetOrderById(int orderId)
